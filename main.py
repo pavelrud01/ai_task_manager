@@ -27,9 +27,11 @@ def main():
         print("FATAL: OPENAI_API_KEY is not set in your .env file.")
         sys.exit(1)
 
-    parser = argparse.ArgumentParser(description="AI Marketing Agent v0.8 (Finalized Core)")
-    parser.add_argument("--input", required=True, help="Path to the input JSON file (e.g., sample_input.json)")
+    parser = argparse.ArgumentParser(description="AI Marketing Agent")
+    parser.add_argument("--input", required=True, help="Path to input JSON")
+    parser.add_argument("--project-dir", required=False, help="Path to project/scenario dir")
     args = parser.parse_args()
+
     
     input_path = Path(args.input)
     if not input_path.exists():

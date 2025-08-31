@@ -1,0 +1,9 @@
+{
+    "goal": "Собрать чистый стандарт из гайда AJTBD по мастер-промту",
+    "mode": "compile_guide",
+    "guide_file": "prompts/guides/AJTBD_Interview_Guide_B2C.md",
+    "master_prompt_file": "prompts/standards/guide_standard.md",
+    "contract_schema": "contracts/guide.schema.json",
+    "output_standard_path": "prompts/standards/interview_ajtbd.md"
+  }
+  

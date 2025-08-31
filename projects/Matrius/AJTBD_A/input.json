@@ -1,19 +1,23 @@
 {
-  "goal": "Выявить AJTBD по продуктовым линиям и собрать JTBD-графы сегментов",
-  "personas": ["Parent_B2C", "Teen_Student"],
-  "products": ["Скорочтение", "Математика", "Логопедия"],
-  "data_availability": "A",
-  "analysis_mode": ["frequency", "impact"],
-  "n_interviews": 6,
-  "guides": {
-    "interview_core": "prompts/guides/AJTBD_Interview_Guide.md",
-    "segment_graph": "prompts/guides/Segment_Graph_Prompt.md",
-    "segment_hypotheses": "prompts/guides/Segment_Hypotheses_B2C.md"
+  "project_id": "Matrius/AJTBD_A",
+  "goal": "Скомпилировать сырой AJTBD-гайд в единый стандарт по мастер-структуре.",
+  "mode": "standardize_guide",
+  "workflow": [
+    "step_00_compliance_check",
+    "step_02a_guide_compile"
+  ],
+  "guide": {
+    "source_path": "prompts/guides/AJTBD_Interview_Guide_B2C.md",
+    "apply_master_prompt": true,
+    "master_prompt_path": "prompts/standards/guide_standard.md",
+    "output_markdown_name": "AJTBD_Interview_Guide_B2C.compiled.md"
   },
-  "sources": {
-    "landing_url": "https://ВАШ-ЛЕНДИНГ",
-    "competitors_file": "projects/EDU_JTBD_A/sources/competitors.txt",
-    "products_file": "projects/EDU_JTBD_A/sources/products.txt"
+  "context": {
+    "company_card": "projects/Matrius/AJTBD_A/context/CompanyCard.md",
+    "market_card": "projects/Matrius/AJTBD_A/context/MarketCard.md",
+    "lessons": "projects/Matrius/AJTBD_A/context/Lessons.md"
   },
-  "flags": { "segment_by_product": true }
+  "contracts": {
+    "schema_name": "guide.schema.json"
+  }
 }
