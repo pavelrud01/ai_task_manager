@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Segments",
+  "type": "object",
+  "properties": {
+    "segments": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "properties": {
+          "segment_name": { "type": "string" },
+          "priority": { "type": "number", "minimum": 1, "maximum": 5 },
+          "primary_fear": { "type": "string" },
+          "desire": { "type": "string" },
+          "jtbd_links": { "type": "array", "items": { "type": "string" } },
+          "lexicon": { "type": "array", "items": { "type": "string" } },
+          "triggers": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["segment_name","priority","primary_fear","desire","jtbd_links"]
+      }
+    }
+  },
+  "required": ["segments"]
+}

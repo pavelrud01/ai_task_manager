@@ -1,0 +1,31 @@
+review_id,date,user_type,product,rating,review_text,sentiment,source,language,country
+1,2024-01-15,startup,Matrius Starter,4,Отличный продукт для нашего стартапа. Простой в использовании, но функциональный.,positive,website,ru,Russia
+2,2024-01-14,small_business,Matrius Business,5,Лучшее решение для автоматизации процессов. Поддержка на высоте!,positive,app_store,ru,Russia
+3,2024-01-13,startup,Matrius Starter,3,Хорошо, но не хватает некоторых интеграций. В целом доволен.,neutral,google_play,ru,Russia
+4,2024-01-12,small_business,Matrius Pro,4,Мощный инструмент с множеством возможностей. Цена оправдана.,positive,website,ru,Russia
+5,2024-01-11,startup,Matrius Starter,2,Сложно разобраться в начале. Нужны лучшие инструкции.,negative,app_store,ru,Russia
+6,2024-01-10,small_business,Matrius Business,5,Используем уже 6 месяцев. ROI превзошел ожидания.,positive,website,ru,Russia
+7,2024-01-09,startup,Matrius Starter,4,Простой и понятный интерфейс. Быстро внедрили.,positive,google_play,ru,Russia
+8,2024-01-08,small_business,Matrius Pro,3,Много функций, но некоторые работают нестабильно.,neutral,website,ru,Russia
+9,2024-01-07,startup,Matrius Starter,5,Идеально подходит для малых команд. Рекомендую!,positive,app_store,ru,Russia
+10,2024-01-06,small_business,Matrius Business,4,Хорошая альтернатива дорогим решениям. Поддержка быстрая.,positive,website,ru,Russia
+11,2024-01-05,startup,Matrius Starter,1,Полный провал. Не работает как заявлено.,negative,google_play,ru,Russia
+12,2024-01-04,small_business,Matrius Pro,5,Лучшее вложение для нашей компании. Автоматизировали 80% процессов.,positive,app_store,ru,Russia
+13,2024-01-03,startup,Matrius Starter,4,Простой старт, понятные функции. То что нужно для начала.,positive,website,ru,Russia
+14,2024-01-02,small_business,Matrius Business,3,Нормально, но интерфейс можно улучшить. Функционал достаточный.,neutral,google_play,ru,Russia
+15,2024-01-01,startup,Matrius Starter,5,Отличный продукт! Быстро настроили, команда довольна.,positive,app_store,ru,Russia
+16,2023-12-31,small_business,Matrius Pro,4,Мощный инструмент. Интеграции работают отлично.,positive,website,ru,Russia
+17,2023-12-30,startup,Matrius Starter,2,Средний продукт. Есть проблемы с производительностью.,negative,google_play,ru,Russia
+18,2023-12-29,small_business,Matrius Business,5,Прекрасное решение для автоматизации. Экономит время и деньги.,positive,app_store,ru,Russia
+19,2023-12-28,startup,Matrius Starter,4,Хорошо подходит для стартапов. Простой и эффективный.,positive,website,ru,Russia
+20,2023-12-27,small_business,Matrius Pro,3,Много возможностей, но сложно освоить. Нужно больше обучения.,neutral,google_play,ru,Russia
+21,2023-12-26,startup,Matrius Starter,5,Лучший выбор для малого бизнеса. Быстро и качественно.,positive,app_store,ru,Russia
+22,2023-12-25,small_business,Matrius Business,4,Стабильно работает, поддержка оперативная. Рекомендую.,positive,website,ru,Russia
+23,2023-12-24,startup,Matrius Starter,1,Не соответствует описанию. Потратили время впустую.,negative,google_play,ru,Russia
+24,2023-12-23,small_business,Matrius Pro,5,Профессиональное решение. ROI превзошел все ожидания.,positive,app_store,ru,Russia
+25,2023-12-22,startup,Matrius Starter,4,Простой и понятный. Быстро внедрили в работу.,positive,website,ru,Russia
+26,2023-12-21,small_business,Matrius Business,3,Нормальный продукт, но есть над чем работать.,neutral,google_play,ru,Russia
+27,2023-12-20,startup,Matrius Starter,5,Отличный старт для автоматизации. Команда довольна.,positive,app_store,ru,Russia
+28,2023-12-19,small_business,Matrius Pro,4,Мощный функционал, хорошая производительность.,positive,website,ru,Russia
+29,2023-12-18,startup,Matrius Starter,2,Средний продукт. Не все функции работают стабильно.,negative,google_play,ru,Russia
+30,2023-12-17,small_business,Matrius Business,5,Лучшее решение для автоматизации процессов. Экономит ресурсы.,positive,app_store,ru,Russia

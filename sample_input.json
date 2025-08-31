@@ -1,0 +1,10 @@
+{
+  "goal": "AJTBD → Segments → Decision Map → Funnel",
+  "analysis_type": "frequency",
+  "channels": ["paid","seo","email"],
+  "n_interviews": 8,
+  "personas": [
+    {"id": "p1", "persona": "SaaS CMO in mid-market IT"},
+    {"id": "p2", "persona": "Tech founder handling marketing solo"}
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "goal": "Нормализовать и дополнить AJTBD-графы на основе богатого VOC",
+  "personas": ["Parent_B2C", "Teen_Student"],
+  "products": ["Скорочтение", "Математика", "Логопедия"],
+  "data_availability": "C",
+  "analysis_mode": ["frequency", "impact"],
+  "files": [
+    "projects/EDU_JTBD_C/data/jtbd_seeds.json",
+    "projects/EDU_JTBD_C/data/crm_export.csv",
+    "projects/EDU_JTBD_C/data/support_tickets.csv",
+    "projects/EDU_JTBD_C/data/app_reviews.jsonl"
+  ],
+  "guides": {
+    "interview_core": "prompts/guides/AJTBD_Interview_Guide.md",
+    "segment_graph": "prompts/guides/Segment_Graph_Prompt.md"
+  },
+  "flags": {
+    "segment_by_product": true,
+    "interview_after_ingest": true
+  },
+  "n_interviews_after_ingest": 2,
+  "uncertainty_gate": 0.35
+}

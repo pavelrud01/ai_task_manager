@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JTBD Extraction",
+  "type": "object",
+  "properties": {
+    "jobs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "job_id": { "type": "string" },
+          "statement": { "type": "string" },
+          "trigger": { "type": "string" },
+          "criteria": { "type": "array", "items": { "type": "string" } },
+          "positive_emotions": { "type": "array", "items": { "type": "string" } },
+          "negative_emotions_pre": { "type": "array", "items": { "type": "string" } },
+          "negative_emotions_post": { "type": "array", "items": { "type": "string" } },
+          "importance_1_10": { "type": "number", "minimum": 1, "maximum": 10 },
+          "frequency": { "type": "string" },
+          "evidence": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["job_id","statement","trigger","importance_1_10","frequency","evidence"]
+      }
+    }
+  },
+  "required": ["jobs"]
+}

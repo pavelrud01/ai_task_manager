@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Decision Mapping",
+  "type": "object",
+  "properties": {
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "segment_name": { "type": "string" },
+          "stages": {
+            "type": "object",
+            "description": "Ключевые стадии (пример B2C: problem, solution_possible, personal_relevance, feasibility, social_validation, risk_eval, urgency, action)",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "barriers": { "type": "array", "items": { "type": "string" } },
+                "triggers": { "type": "array", "items": { "type": "string" } },
+                "messages": { "type": "array", "items": { "type": "string" } },
+                "proof": { "type": "array", "items": { "type": "string" } },
+                "kpis": { "type": "array", "items": { "type": "string" } }
+              },
+              "required": ["barriers","messages"]
+            }
+          }
+        },
+        "required": ["segment_name","stages"]
+      }
+    },
+    "gaps": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+  },
+  "required": ["segments","gaps"]
+}

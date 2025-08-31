@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Interview Guide",
+  "type": "object",
+  "required": ["meta", "sections"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "version": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "sections": {
+      "type": "object",
+      "required": [
+        "intro",
+        "core_questions",
+        "deepening_5whys",
+        "branching_rules",
+        "output_hints",
+        "safety_ethics",
+        "stop_conditions"
+      ],
+      "properties": {
+        "intro": { "type": "string" },
+        "core_questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "text", "type", "followups"],
+            "properties": {
+              "id": { "type": "string" },
+              "text": { "type": "string" },
+              "type": { "type": "string", "enum": ["open", "scale", "multiple"] },
+              "followups": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "deepening_5whys": { "type": "string" },
+        "branching_rules": { "type": "string" },
+        "evidence_tags": { "type": "array", "items": { "type": "string" } },
+        "output_hints": { "type": "string" },
+        "safety_ethics": { "type": "string" },
+        "stop_conditions": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

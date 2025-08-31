@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Actionable Tasks (v0.7)",
+    "description": "A list of concrete tasks ready for implementation.",
+    "type": "object",
+    "properties": {
+      "tasks": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "task_title": { "type": "string" },
+            "description_dod": { "type": "string", "description": "Task description and Definition of Done." },
+            "owner_role": { "type": "string", "enum": ["Designer", "Copywriter", "Developer", "Marketer"] },
+            "deadline_category": { "type": "string", "enum": ["Week 1", "Week 2+"] },
+            "priority": { "type": "string", "enum": ["critical", "high", "medium", "low"] }
+          },
+          "required": ["task_title", "description_dod", "owner_role", "priority"]
+        }
+      }
+    },
+    "required": ["tasks"]
+  }
