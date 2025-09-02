@@ -49,8 +49,10 @@ class Step(BaseStep):
         if not corpus:
             return StepResult(score=0.2, notes="No interview corpus found. Run step_03 first.")
 
-        # Возьмем стандарт JTBD (если есть)
+        # Получаем стандарты и гайды
+        tdd = standards.get("tdd.md", "")
         jtbd_std = standards.get("jtbd.md", "")
+        evidence_tags_md = (context.get("guides", {}) or {}).get("Evidence_Tags.md", "")
 
         # Сделаем компактный превью корпуса (LLM-friendly)
         preview_chunks = []
@@ -59,28 +61,58 @@ class Step(BaseStep):
             preview_chunks.append(json.dumps(session, ensure_ascii=False)[:1200])
         preview = "\n---\n".join(preview_chunks)
 
-        system = "You produce clean JTBD graphs from qualitative VOC according to the provided standard and contract."
-        prompt = f"""
-Build a JTBD graph (Big/Medium/Small jobs) and associated evidence from the VOC preview below.
-Return ONLY a JSON object that matches the contract for step_04_jtbd.schema.json.
+        system_prompt = (
+            "You are a senior JTBD analyst. Produce structured JTBD items that VALIDATE against the JSON Schema. "
+            "Attach evidence_refs with quotes and canonical tags. Follow TDD standard (red→green→refactor, 5 whys, DOD)."
+        )
 
-VOC PREVIEW:
-{preview}
+        user_prompt = f"""
+INPUT CONTEXT:
+- Company: {context['input'].get('company', 'N/A')}
+- Products: {context['input'].get('products', [])}
+- Raw interviews/reviews may be available in artifacts and previous steps.
 
-STANDARD (JTBD.md):
-{jtbd_std}
+REQUIREMENTS:
+1) Follow JTBD standard and TDD rules strictly.
+2) For EVERY JTBD item include at least ONE evidence_ref with:
+   id (E-...), source_type, quote, confidence, and tags[] from the canonical list.
+3) Use tag families from Evidence Tags guide.
+4) Output MUST validate against step_04_jtbd.schema.json.
+
+EVIDENCE TAGS GUIDE:
+---
+{evidence_tags_md[:2500]}
+---
+
+STANDARDS:
+---
+{jtbd_std[:2500]}
+---
+TDD:
+---
+{tdd[:2500]}
+---
 """
 
-        llm_json = self.llm.generate_json(system=system, prompt=prompt, standard_text=jtbd_std)
+        schema = (context.get("schemas") or {}).get("step_04_jtbd", {})
+        std_text = (context.get("md_standards") or {}).get("jtbd.md", "")
+        resp = self.llm.generate_json(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            org_context="",
+            standard_schema=schema,
+            standard_text=std_text,
+            reflection_notes=context.get("reflection_notes","")
+        )
         # ожидаем формат {"data": {...}, "score": ..., "uncertainty": ..., "notes": ...}
-        data = llm_json.get("data", {})
+        data = resp.get("data", {})
 
         # Валидация по контракту + чеклист
         schema_score, checklist_score, validation_notes = validate_artifact(self.name, data, standards)
 
         # Итоговая оценка
-        self_score = float(llm_json.get("score", 0.7))
+        self_score = float(resp.get("score", 0.7))
         final_score = min(self_score, schema_score, checklist_score)
 
-        notes = f"JTBD built. Validation: {validation_notes}. LLM notes: {llm_json.get('notes','')}"
-        return StepResult(data=data, score=final_score, notes=notes, uncertainty=float(llm_json.get("uncertainty", 0.2)))
+        notes = f"JTBD built. Validation: {validation_notes}. LLM notes: {resp.get('notes','')}"
+        return StepResult(data=data, score=final_score, notes=notes, uncertainty=float(resp.get("uncertainty", 0.2)))

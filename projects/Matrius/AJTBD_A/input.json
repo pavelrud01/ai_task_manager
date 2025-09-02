@@ -1,23 +1,17 @@
 {
-  "project_id": "Matrius/AJTBD_A",
-  "goal": "Скомпилировать сырой AJTBD-гайд в единый стандарт по мастер-структуре.",
-  "mode": "standardize_guide",
-  "workflow": [
-    "step_00_compliance_check",
-    "step_02a_guide_compile"
+  "project": "Matrius",
+  "run_id": "AJTBD_A",
+  "mode": "guide_compile",
+  "guide_source": "prompts/guides/AJTBD_Interview_Guide_B2C.md",
+  "target_basename": "AJTBD_Interview_Guide_B2C",
+  "output_dir": "projects/Matrius/standards",
+  "standards": [
+    "prompts/standards/guide_standard.md"
   ],
-  "guide": {
-    "source_path": "prompts/guides/AJTBD_Interview_Guide_B2C.md",
-    "apply_master_prompt": true,
-    "master_prompt_path": "prompts/standards/guide_standard.md",
-    "output_markdown_name": "AJTBD_Interview_Guide_B2C.compiled.md"
-  },
-  "context": {
-    "company_card": "projects/Matrius/AJTBD_A/context/CompanyCard.md",
-    "market_card": "projects/Matrius/AJTBD_A/context/MarketCard.md",
-    "lessons": "projects/Matrius/AJTBD_A/context/Lessons.md"
-  },
-  "contracts": {
-    "schema_name": "guide.schema.json"
+  "auto_write": true,
+  "metadata": {
+    "owner": "you",
+    "doc_type": "AJTBD Guide",
+    "version": "v1-draft"
   }
 }

@@ -1,34 +1,66 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Decision Mapping",
+  "title": "Decision Mapping Output Schema v2",
   "type": "object",
   "properties": {
-    "segments": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "segment_name": { "type": "string" },
-          "stages": {
-            "type": "object",
-            "description": "Ключевые стадии (пример B2C: problem, solution_possible, personal_relevance, feasibility, social_validation, risk_eval, urgency, action)",
-            "additionalProperties": {
-              "type": "object",
-              "properties": {
-                "barriers": { "type": "array", "items": { "type": "string" } },
-                "triggers": { "type": "array", "items": { "type": "string" } },
-                "messages": { "type": "array", "items": { "type": "string" } },
-                "proof": { "type": "array", "items": { "type": "string" } },
-                "kpis": { "type": "array", "items": { "type": "string" } }
-              },
-              "required": ["barriers","messages"]
+    "journey": {
+      "type": "object",
+      "properties": {
+        "b2c": {
+          "type": "object",
+          "properties": {
+            "stages": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/Stage" }
+            },
+            "gaps": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/Gap" }
             }
-          }
-        },
-        "required": ["segment_name","stages"]
-      }
-    },
-    "gaps": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+          },
+          "required": ["stages", "gaps"]
+        }
+      },
+      "required": ["b2c"]
+    }
   },
-  "required": ["segments","gaps"]
+  "required": ["journey"],
+  "$defs": {
+    "EvidenceRef": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^E-[A-Za-z0-9_-]{4,}$" },
+        "source_type": { "type": "string", "enum": ["interview", "review", "crm", "support", "web", "experiment"] },
+        "source_doc": { "type": "string" },
+        "locator": { "type": "string" },
+        "quote": { "type": "string", "minLength": 5 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "tags": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      },
+      "required": ["id", "source_type", "quote", "confidence"]
+    },
+    "Stage": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "content_present": { "type": "boolean" },
+        "notes": { "type": "string" }
+      },
+      "required": ["name", "content_present"]
+    },
+    "Gap": {
+      "type": "object",
+      "properties": {
+        "stage": { "type": "string" },
+        "missing_content": { "type": "string" },
+        "priority": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/EvidenceRef" },
+          "minItems": 1
+        }
+      },
+      "required": ["stage", "missing_content", "priority", "evidence_refs"]
+    }
+  }
 }

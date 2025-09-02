@@ -19,7 +19,15 @@ class Step(BaseStep):
             "Return only JSON {data, score, notes, uncertainty} where data fits 'step_12_funnel_design' schema."
         )
 
-        resp = self.llm.generate_json(system, user, str(org), md, context.get("reflection_notes",""))
+        schema = (context.get("schemas") or {}).get("step_12_funnel_design", {})
+        resp = self.llm.generate_json(
+            system_prompt=system,
+            user_prompt=user,
+            org_context=str(org),
+            standard_schema=schema,
+            standard_text=md,
+            reflection_notes=context.get("reflection_notes","")
+        )
         return StepResult(
             data=resp.get("data",{}),
             score=float(resp.get("score",0.7) or 0.7),

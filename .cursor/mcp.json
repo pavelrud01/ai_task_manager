@@ -25,6 +25,18 @@
         "list_projects",
         "list_project_files"
       ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "--root", "${workspaceRoot}"]
+    },
+    "process": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-process"]
+    },
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"]
     }
   }
 }

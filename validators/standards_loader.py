@@ -2,13 +2,7 @@
 from __future__ import annotations
 from pathlib import Path
 from typing import Dict, Optional, Tuple
-from pathlib import Path
 import re
-import yaml
-
-
-# NB: для чтения YAML front-matter вам понадобится PyYAML
-# добавьте в requirements.txt: PyYAML>=6.0.1
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -132,68 +126,75 @@ def parse_guide_markdown(md_text: str) -> Tuple[dict, dict]:
 def contracts_dir() -> Path:
     return CONTRACTS_DIR
 
-def contracts_dir() -> Path:
-    return Path(__file__).resolve().parents[1] / "contracts"
-
 def guides_dir() -> Path:
-    return Path(__file__).resolve().parents[1] / "prompts" / "guides"
+    return GLOBAL_GUIDES_DIR
 
-def load_guide_markdown(guide_path: str, project_dir: Path | None) -> str:
+
+# NEW: загрузка всех .md стандартов (проектовые перекрывают глобальные)
+def load_md_standards(project_dir: Optional[Path] = None) -> Dict[str, str]:
+    return load_core_standards(project_dir)
+
+
+# NEW: загрузка всех JSON-схем контрактов
+def load_contract_schemas() -> Dict[str, dict]:
+    result: Dict[str, dict] = {}
+    if CONTRACTS_DIR.exists():
+        for p in CONTRACTS_DIR.glob("*.schema.json"):
+            try:
+                result[p.stem] = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+            except Exception:
+                result[p.stem] = {}
+    return result
+
+
+# NEW: загрузка орг-контекста (CompanyCard/MarketCard/Lessons)
+def load_organizational_context() -> Dict[str, str]:
+    ctx_dir = REPO_ROOT / "prompts" / "context"
+    def read_or_empty(name: str) -> str:
+        p = ctx_dir / name
+        return p.read_text(encoding="utf-8") if p.exists() else ""
+    return {
+        "CompanyCard.md": read_or_empty("CompanyCard.md"),
+        "MarketCard.md": read_or_empty("MarketCard.md"),
+        "Lessons.md": read_or_empty("Lessons.md"),
+    }
+
+
+# NEW: короткое резюме понимания для step_00_understanding.md
+def summarize_understanding(context: dict) -> str:
+    md = ["# STEP-00 — Understanding",
+          "## Inputs",
+          f"- Company: {context.get('input',{}).get('company','N/A')}",
+          f"- Products: {context.get('input',{}).get('products',[])}",
+          "## Standards loaded", ", ".join(sorted((context.get('md_standards') or {}).keys())) or "-",
+          "## Schemas loaded", ", ".join(sorted((context.get('schemas') or {}).keys())) or "-",
+          "## Org Context Preview"]
+    # форматируем короткий превью контекста
+    org = context.get("org_context") or {}
+    for name, content in org.items():
+        if content and len(content.strip()) > 10:
+            md.append(f"### {name}\n{content[:500]}...\n")
+    return "\n".join(md)
+
+
+def get_standard_for_step(step_name: str, project_dir: Optional[Path], md_standards: Dict[str, str]) -> str:
     """
-    Резолвит путь к гайду:
-    1) Абсолютный — читаем как есть.
-    2) Относительный + project_dir — ищем внутри проекта.
-    3) Иначе — ищем в prompts/guides/.
+    Получает стандарт для конкретного шага.
+    Ищет в md_standards по имени файла, соответствующему шагу.
     """
-    p = Path(guide_path)
-    candidates = []
-    if p.is_absolute():
-        candidates.append(p)
-    if project_dir:
-        candidates.append(Path(project_dir) / guide_path)
-    candidates.append(guides_dir() / guide_path)
-
-    for c in candidates:
-        if c.exists():
-            return c.read_text(encoding="utf-8")
-    raise FileNotFoundError(f"Guide not found by paths: {', '.join(map(str, candidates))}")
-
-_HEADER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
-
-def parse_guide_markdown(md: str) -> tuple[dict, dict]:
-    """
-    Поддерживает YAML-фронтматтер между --- --- и секции вида:
-    ## Intro
-    ## Core Questions
-    ## Deepening (5 Whys)
-    ## Branching Rules
-    ## Output Contract Hints
-    ## Safety & Ethics
-    ## Stop Conditions
-    Возвращает (meta_dict, sections_dict)
-    """
-    meta = {}
-    m = _HEADER_RE.match(md)
-    body = md
-    if m:
-        try:
-            meta = yaml.safe_load(m.group(1)) or {}
-        except Exception:
-            meta = {}
-        body = md[m.end():]
-
-    sections = {}
-    current = None
-    lines = []
-    for line in body.splitlines():
-        if line.startswith("## "):
-            if current:
-                sections[current] = "\n".join(lines).strip()
-                lines = []
-            current = line.replace("## ", "").strip()
-        else:
-            lines.append(line)
-    if current:
-        sections[current] = "\n".join(lines).strip()
-
-    return meta, sections
+    # Маппинг имен шагов на имена файлов стандартов
+    step_to_standard = {
+        "step_05_segments": "segmentation.md",
+        "step_06_decision_mapping": "decision_mapping.md", 
+        "step_12_funnel_design": "funnel_design.md",
+        "step_04_jtbd": "jtbd.md",
+        "step_03_interview_collect": "interview_ajtbd.md",
+        "step_02a_guide_compile": "guide_standard.md"
+    }
+    
+    standard_file = step_to_standard.get(step_name)
+    if standard_file and standard_file in md_standards:
+        return md_standards[standard_file]
+    
+    # Если не найден, возвращаем пустую строку
+    return ""

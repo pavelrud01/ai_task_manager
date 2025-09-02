@@ -1,0 +1,29 @@
+paths:
+  project_root: .
+  artifacts_root: artifacts
+  guide_path: projects/Matrius/standards/AJTBD_Interview_Guide_B2C.md
+  product_dir: projects/Matrius/facts
+  segments_seed: projects/Matrius/facts/segments_seed.csv
+
+models:
+  llm: gpt-4o-mini
+  temperature: 0.2
+  max_tokens: 2500
+
+interview:
+  runner: legacy          # legacy | builtin
+  legacy:
+    cmd: "python external/legacy_jtbd_cli/main.py"  # путь к старому CLI (скрипт/репо)
+    timeout_sec: 600
+
+split_policy:
+  max_children_per_segment: 3
+  min_similarity_delta: 0.2
+
+qa:
+  min_coverage: 0.8
+  required_fields_ljd: [importance, frequency, pains, desired_outcomes, triggers]
+
+orchestration:
+  step_timeout_sec: 600
+  retry: 1

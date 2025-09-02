@@ -1,0 +1,20 @@
+{
+  "$schema":"http://json-schema.org/draft-07/schema#",
+  "type":"object",
+  "required":["segment_id","QAs","quality"],
+  "properties":{
+    "segment_id":{"type":"string"},
+    "QAs":{"type":"array","minItems":3,"items":{
+      "type":"object","required":["section","q","a"],
+      "properties":{"section":{"type":"string"},"q":{"type":"string"},"a":{"type":"string"}}
+    }},
+    "quality":{
+      "type":"object",
+      "required":["coverage_pct","missing_sections"],
+      "properties":{
+        "coverage_pct":{"type":"number","minimum":0,"maximum":1},
+        "missing_sections":{"type":"array","items":{"type":"string"}}
+      }
+    }
+  }
+}

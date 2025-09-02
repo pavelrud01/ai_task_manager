@@ -1,27 +1,57 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "JTBD Extraction",
+  "title": "JTBD Output Schema v2",
   "type": "object",
   "properties": {
     "jobs": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "job_id": { "type": "string" },
-          "statement": { "type": "string" },
-          "trigger": { "type": "string" },
-          "criteria": { "type": "array", "items": { "type": "string" } },
-          "positive_emotions": { "type": "array", "items": { "type": "string" } },
-          "negative_emotions_pre": { "type": "array", "items": { "type": "string" } },
-          "negative_emotions_post": { "type": "array", "items": { "type": "string" } },
-          "importance_1_10": { "type": "number", "minimum": 1, "maximum": 10 },
-          "frequency": { "type": "string" },
-          "evidence": { "type": "array", "items": { "type": "string" } }
-        },
-        "required": ["job_id","statement","trigger","importance_1_10","frequency","evidence"]
-      }
+      "items": { "$ref": "#/$defs/JTBDItem" },
+      "minItems": 1
     }
   },
-  "required": ["jobs"]
+  "required": ["jobs"],
+  "$defs": {
+    "EvidenceRef": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^E-[A-Za-z0-9_-]{4,}$" },
+        "source_type": { "type": "string", "enum": ["interview", "review", "crm", "support", "web", "experiment"] },
+        "source_doc": { "type": "string" },
+        "locator": { "type": "string" },
+        "quote": { "type": "string", "minLength": 5 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 },
+          "minItems": 1
+        }
+      },
+      "required": ["id", "source_type", "quote", "confidence"]
+    },
+    "JTBDItem": {
+      "type": "object",
+      "properties": {
+        "job_id": { "type": "string", "pattern": "^J-[A-Za-z0-9_-]{4,}$" },
+        "statement": { "type": "string", "minLength": 10 },
+        "type": { "type": "string", "enum": ["functional", "emotional", "social"] },
+        "outcomes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "frequency": { "type": "string", "enum": ["low", "medium", "high"] },
+        "importance": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/EvidenceRef" },
+          "minItems": 1
+        }
+      },
+      "required": ["job_id", "statement", "type", "importance", "evidence_refs"]
+    }
+  }
 }

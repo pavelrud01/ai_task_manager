@@ -1,0 +1,18 @@
+{
+  "$schema":"http://json-schema.org/draft-07/schema#",
+  "type":"object",
+  "required":["segment_id","job_title","job_summary","functional","emotional","social","pains","desired_outcomes","triggers","constraints","proof_points_needed"],
+  "properties":{
+    "segment_id":{"type":"string"},
+    "job_title":{"type":"string"},
+    "job_summary":{"type":"string"},
+    "functional":{"type":"array","items":{"type":"string"}},
+    "emotional":{"type":"array","items":{"type":"string"}},
+    "social":{"type":"array","items":{"type":"string"}},
+    "pains":{"type":"array","items":{"type":"string"}},
+    "desired_outcomes":{"type":"array","items":{"type":"string"}},
+    "triggers":{"type":"array","items":{"type":"string"}},
+    "constraints":{"type":"array","items":{"type":"string"}},
+    "proof_points_needed":{"type":"array","items":{"type":"string"}}
+  }
+}

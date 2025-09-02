@@ -129,6 +129,15 @@ def main():
                 if final_score >= QUALITY_THRESHOLD:
                     artifacts[step_name] = result.data
                     save_artifact(run_dir, step_name, result, time.monotonic() - start_time)
+                    
+                    # промоут для гайда
+                    if step_name == "step_02a_guide_compile":
+                        promote_to = artifacts[step_name].get("__promote_to")
+                        if promote_to:
+                            from utils.io import promote_guide_artifacts
+                            promote_guide_artifacts(artifacts[step_name], promote_to, run_dir)
+                            print(f"[PROMOTED] Guide saved to: {promote_to}")
+                    
                     mem.log_event(f"{step_name}_SUCCESS", result.model_dump())
                     step_index += 1
                     break

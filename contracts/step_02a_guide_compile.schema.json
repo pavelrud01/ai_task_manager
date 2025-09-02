@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Guide Compile Artifact",
+    "type": "object",
+    "properties": {
+      "meta": {
+        "type": "object",
+        "properties": {
+          "title": {"type": "string"},
+          "purpose": {"type": "string"},
+          "audience": {"type": "string"},
+          "persona_types": {"type": "array", "items": {"type": "string"}},
+          "products": {"type": "array", "items": {"type": "string"}},
+          "interview_mode": {"type": "string", "enum": ["simulate", "external"]},
+          "min_sessions": {"type": "integer"},
+          "max_sessions": {"type": "integer"},
+          "allow_followups": {"type": "boolean"},
+          "version": {"type": "string"},
+          "last_updated": {"type": "string"}
+        },
+        "required": [
+          "title","purpose","audience","interview_mode",
+          "min_sessions","max_sessions","allow_followups",
+          "version","last_updated"
+        ]
+      },
+      "sections": {
+        "type": "object",
+        "description": "Named sections of the guide",
+        "additionalProperties": {"type": "string"}
+      },
+      "sources": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "path": {"type": "string"},
+            "sha256": {"type": "string"}
+          },
+          "required": ["path","sha256"]
+        }
+      },
+      "markdown": {"type": "string"}
+    },
+    "required": ["meta","sections","sources","markdown"]
+  }
+  

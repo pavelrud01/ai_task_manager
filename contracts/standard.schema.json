@@ -1,0 +1,25 @@
+{
+  "$schema":"http://json-schema.org/draft-07/schema#",
+  "type":"object",
+  "required":["standard_id","sections","interview_rules"],
+  "properties":{
+    "standard_id":{"type":"string"},
+    "sections":{
+      "type":"array",
+      "items":{"type":"object","required":["id","prompt","required"],
+        "properties":{
+          "id":{"type":"string"},
+          "prompt":{"type":"string"},
+          "required":{"type":"boolean"}
+        }}
+    },
+    "interview_rules":{
+      "type":"object",
+      "required":["style","depth_min_q"],
+      "properties":{
+        "style":{"type":"string"},
+        "depth_min_q":{"type":"integer","minimum":1}
+      }
+    }
+  }
+}

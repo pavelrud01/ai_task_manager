@@ -1,0 +1,20 @@
+{
+    "project": "Matrius",
+    "run_id": "AJTBD_A_guide_compile",
+    "mode": "guide_compile",
+    "raw_guide_path": "prompts/guides/AJTBD_Interview_Guide_B2C.md",
+    "standard_path": "prompts/standards/guide_standard.md",
+    "sources_glob": [
+      "projects/Matrius/AJTBD_A/sources/*.txt"
+    ],
+    "promote_to": "projects/Matrius/standards/AJTBD_Interview_Guide_B2C.md",
+    "standards": [
+      "prompts/standards/guide_standard.md"
+    ],
+    "context": {
+      "company_card": "projects/Matrius/AJTBD_A/context/CompanyCard.md",
+      "market_card": "projects/Matrius/AJTBD_A/context/MarketCard.md",
+      "lessons": "projects/Matrius/AJTBD_A/context/Lessons.md"
+    }
+  }
+  
