@@ -85,9 +85,9 @@ class Step(BaseStep):
                     system_prompt=system,
                     user_prompt=user,
                     org_context=str(context.get("org_context", {})),
-                    standard_schema={},
-                    standard_text="",
-                    reflection_notes=""
+                    standard_schema=context.get("schemas", {}).get("step_05b_interview_refine", {}),
+                    standard_text=context.get("md_standards", {}).get("interview_ajtbd.md", ""),
+                    reflection_notes=context.get("reflection_notes", "")
                 )
                 
                 # Обрабатываем ответ

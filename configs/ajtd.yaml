@@ -6,7 +6,7 @@ paths:
   segments_seed: projects/Matrius/facts/segments_seed.csv
 
 models:
-  llm: gpt-4o-mini
+  llm: gpt-5-high
   temperature: 0.2
   max_tokens: 2500
 

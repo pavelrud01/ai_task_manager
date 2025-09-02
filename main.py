@@ -5,14 +5,13 @@ import time
 import uuid
 from datetime import datetime
 from pathlib import Path
-from utils.io import ensure_run_dir
-
-
 # Импортируем все переменные из конфига
 from config import *
 from memory.memory import Memory
 from utils.io import (append_lesson, confirm_action, ensure_run_dir,
                     save_artifact, save_md)
+from utils.logging import get_logger
+from utils.determinism import set_random_seed
 from validators.standards_loader import (load_contract_schemas,
                                        load_md_standards,
                                        load_organizational_context,
@@ -23,6 +22,9 @@ from workflow.registry import load_step
 
 
 def main():
+    # Устанавливаем детерминизм в начале
+    set_random_seed()
+    
     if not OPENAI_API_KEY:
         print("FATAL: OPENAI_API_KEY is not set in your .env file.")
         sys.exit(1)
@@ -40,13 +42,27 @@ def main():
 
     run_id = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:4]}"
     run_dir = ensure_run_dir(run_id)
+    
+    # Инициализируем логгер
+    logger = get_logger(run_dir)
+    
     print(f"🚀 Starting run: {run_id}. Artifacts will be saved in: {run_dir}")
+    print(f"RUN ID: {run_id}")
+    print(f"ARTIFACTS: artifacts/{run_id}")
+    
+    # Собираем весь контекст для прогона
+    project_dir = Path(args.project_dir) if args.project_dir else None
+    
+    # Логируем начало запуска
+    logger.log_event("run_start", {
+        "run_id": run_id,
+        "input_file": str(input_path),
+        "project_dir": str(project_dir) if project_dir else None
+    })
 
     with input_path.open("r", encoding="utf-8") as f:
         input_payload = json.load(f)
-
-    # Собираем весь контекст для прогона
-    md_standards = load_md_standards()
+    md_standards = load_md_standards(project_dir)
     schemas = load_contract_schemas()
     org_context = load_organizational_context()
 
@@ -165,6 +181,8 @@ def main():
                     break
 
     print(f"\n✅ Workflow finished. Artifacts saved in: {run_dir}")
+    print(f"RUN ID: {run_id}")
+    print(f"ARTIFACTS: artifacts/{run_id}")
 
 if __name__ == "__main__":
     main()

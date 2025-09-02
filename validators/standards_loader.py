@@ -1,7 +1,7 @@
 # validators/standards_loader.py
 from __future__ import annotations
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, List
 import re
 import yaml
 
@@ -123,6 +123,45 @@ def parse_guide_markdown(md_text: str) -> Tuple[dict, dict]:
     return meta, sections
 
 
+def validate_interview_guide(guide_md: str) -> Tuple[bool, List[str]]:
+    """
+    Минимальная проверка стандарта интервью:
+    - отсутствие тайм-меток в тексте
+    - наличие write_to у вопросов
+    - проверяемые {подстановки}
+    """
+    errors = []
+    
+    # Проверка на тайм-метки (например, "10:30", "2 минуты")
+    time_patterns = [
+        r'\d{1,2}:\d{2}',  # 10:30
+        r'\d+\s*(минут|минуты|минуту|час|часа|часов)',  # 2 минуты
+        r'\d+\s*(min|mins|hour|hours)',  # 2 min
+    ]
+    
+    for pattern in time_patterns:
+        if re.search(pattern, guide_md, re.IGNORECASE):
+            errors.append(f"Found time markers in guide: {pattern}")
+    
+    # Проверка на наличие write_to в вопросах
+    if "write_to" not in guide_md.lower():
+        errors.append("No 'write_to' found in questions")
+    
+    # Проверка на подстановки {variable}
+    substitution_pattern = r'\{[^}]+\}'
+    substitutions = re.findall(substitution_pattern, guide_md)
+    if not substitutions:
+        errors.append("No variable substitutions found (e.g., {product_name})")
+    
+    # Проверка на наличие основных секций
+    required_sections = ["Core Questions", "Evidence Tags", "Output Contract"]
+    for section in required_sections:
+        if section not in guide_md:
+            errors.append(f"Missing required section: {section}")
+    
+    return len(errors) == 0, errors
+
+
 def contracts_dir() -> Path:
     return CONTRACTS_DIR
 
@@ -137,11 +176,12 @@ def load_md_standards(project_dir: Optional[Path] = None) -> Dict[str, str]:
 
 # NEW: загрузка всех JSON-схем контрактов
 def load_contract_schemas() -> Dict[str, dict]:
+    import json
     result: Dict[str, dict] = {}
     if CONTRACTS_DIR.exists():
         for p in CONTRACTS_DIR.glob("*.schema.json"):
             try:
-                result[p.stem] = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+                result[p.stem] = json.loads(p.read_text(encoding="utf-8")) or {}
             except Exception:
                 result[p.stem] = {}
     return result
@@ -164,10 +204,16 @@ def load_organizational_context() -> Dict[str, str]:
 def summarize_understanding(context: dict) -> str:
     md = ["# STEP-00 — Understanding",
           "## Inputs",
-          f"- Company: {context.get('input',{}).get('company','N/A')}",
+          f"- Company: {context.get('input',{}).get('company_name','N/A')}",
+          f"- Landing URL: {context.get('input',{}).get('landing_url','N/A')}",
           f"- Products: {context.get('input',{}).get('products',[])}",
-          "## Standards loaded", ", ".join(sorted((context.get('md_standards') or {}).keys())) or "-",
-          "## Schemas loaded", ", ".join(sorted((context.get('schemas') or {}).keys())) or "-",
+          "",
+          "## Standards loaded",
+          ", ".join(sorted((context.get('md_standards') or {}).keys())) or "-",
+          "",
+          "## Schemas loaded", 
+          ", ".join(sorted((context.get('schemas') or {}).keys())) or "-",
+          "",
           "## Org Context Preview"]
     # форматируем короткий превью контекста
     org = context.get("org_context") or {}

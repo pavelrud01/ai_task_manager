@@ -4,8 +4,9 @@ import time
 import os
 import shutil
 from datetime import datetime
+from typing import Dict, Any, Optional, Union
 
-def promote_guide_artifacts(artifact: dict, promote_to_path: str, run_dir: Path):
+def promote_guide_artifacts(artifact: Dict[str, Any], promote_to_path: str, run_dir: Path) -> None:
     """
     Копирует финальный guide (markdown) в проектные стандарты и создаёт .index.json рядом.
     """
@@ -52,7 +53,7 @@ def save_md(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
-def save_artifact(run_dir: Path, step_name: str, result, execution_time: float) -> None:
+def save_artifact(run_dir: Path, step_name: str, result: Any, execution_time: float) -> None:
     """
     Сохраняет артефакт шага в JSON формате.
     """
@@ -108,18 +109,18 @@ def new_run_id() -> str:
     return datetime.now().strftime("%Y%m%d-%H%M%S")
 
 
-def make_run_dirs(artifacts_root: str, run_id: str) -> dict:
+def make_run_dirs(artifacts_root: str, run_id: str) -> Dict[str, str]:
     """Create run directory structure and return paths"""
-    base = pathlib.Path(artifacts_root, run_id)
+    base = Path(artifacts_root, run_id)
     sub = ["00_ingest", "01_standard", "02_interview", "03_ljd", "04_refine", "05_cluster", "_meta"]
     for s in sub: 
         (base / s).mkdir(parents=True, exist_ok=True)
     return {k: str(base / k) for k in sub}
 
 
-def write_manifest(artifacts_root: str, run_id: str, update: dict):
+def write_manifest(artifacts_root: str, run_id: str, update: Dict[str, Any]) -> None:
     """Write or update manifest.json for the run"""
-    path = pathlib.Path(artifacts_root, run_id, "_meta", "manifest.json")
+    path = Path(artifacts_root, run_id, "_meta", "manifest.json")
     data = {}
     if path.exists():
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -128,10 +129,10 @@ def write_manifest(artifacts_root: str, run_id: str, update: dict):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def symlink_latest(artifacts_root: str, run_id: str):
+def symlink_latest(artifacts_root: str, run_id: str) -> None:
     """Create symlink 'latest' pointing to current run"""
-    latest = pathlib.Path(artifacts_root, "latest")
-    target = pathlib.Path(artifacts_root, run_id)
+    latest = Path(artifacts_root, "latest")
+    target = Path(artifacts_root, run_id)
     # На Windows, если симлинк недоступен — делаем копию или используем junction по вашей политике:
     if latest.exists() or latest.is_symlink():
         try:

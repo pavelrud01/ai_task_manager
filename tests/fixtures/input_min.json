@@ -1,0 +1,50 @@
+{
+  "company_name": "SmokeTest Corp",
+  "landing_url": "https://smoketest.example.com",
+  "products": [
+    {
+      "name": "Test Product",
+      "description": "Минимальный продукт для smoke-тестирования",
+      "target_audience": "Тестовые пользователи",
+      "key_features": [
+        "Базовая функциональность",
+        "Простое тестирование"
+      ]
+    }
+  ],
+  "interview_mode": "simulate",
+  "simulation_config": {
+    "num_interviews": 3,
+    "personas": [
+      "Тестовый пользователь 1",
+      "Тестовый пользователь 2"
+    ],
+    "scenarios": [
+      "Базовое использование",
+      "Решение простой задачи"
+    ]
+  },
+  "context": {
+    "industry": "Тестирование",
+    "market_size": "Минимальный",
+    "competition_level": "Низкий",
+    "business_model": "Test SaaS",
+    "target_region": "Test Region"
+  },
+  "goals": [
+    "Проверить базовую функциональность workflow",
+    "Убедиться в создании основных артефактов",
+    "Проверить наличие evidence references"
+  ],
+  "constraints": [
+    "Минимальное время выполнения",
+    "Экономия токенов LLM",
+    "Фокус на базовой функциональности"
+  ],
+  "success_metrics": [
+    "Создание всех основных артефактов",
+    "Наличие evidence references",
+    "Корректная структура JSON"
+  ]
+}
+

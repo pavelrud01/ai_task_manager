@@ -1,0 +1,17 @@
+{
+    "company": "Matrius",
+    "products": ["Скорочтение"],
+    "personas": ["Родители 7–10", "Родители 11–14"],
+    "guides": {
+      "interview_core": "[v3.3] Гайд AJTBD-интервью для B2C-продуктов.md"
+    },
+    "data_availability": "A",
+    "n_interviews": 4,
+    "flags": {
+      "interview_after_ingest": false,
+      "autofix_until_valid": true,
+      "max_passes": 2,
+      "use_precompiled_guide": false
+    }
+  }
+  

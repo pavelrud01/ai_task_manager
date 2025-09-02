@@ -11,3 +11,4 @@
 - 5 Whys повторять до конкретной причины или явного незнания
 ## Output Hints
 - Для каждого респондента: timeline[], struggles[], alternatives[], outcomes[], quotes[]
+

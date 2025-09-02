@@ -1,0 +1,67 @@
+{
+  "company_name": "EstablishedCorp Ltd",
+  "landing_url": "https://establishedcorp.com",
+  "products": [
+    {
+      "name": "Enterprise Solution",
+      "description": "Корпоративное решение для автоматизации бизнес-процессов",
+      "target_audience": "B2B клиенты",
+      "key_features": [
+        "Интеграция с CRM",
+        "Аналитика и отчеты",
+        "Мобильное приложение",
+        "API для разработчиков"
+      ]
+    }
+  ],
+  "interview_mode": "ingest",
+  "data_sources": [
+    "data/existing_interviews.jsonl",
+    "data/customer_feedback.csv",
+    "data/support_tickets.csv"
+  ],
+  "ingest_config": {
+    "follow_up_required": true,
+    "min_interviews": 20,
+    "quality_threshold": 0.7,
+    "persona_balance": true
+  },
+  "context": {
+    "industry": "Корпоративное ПО",
+    "market_size": "Крупный",
+    "competition_level": "Средний",
+    "business_model": "Enterprise SaaS",
+    "target_region": "Глобальный"
+  },
+  "existing_data": {
+    "customer_segments": [
+      "Малый бизнес (1-50 сотрудников)",
+      "Средний бизнес (51-500 сотрудников)",
+      "Крупный бизнес (500+ сотрудников)"
+    ],
+    "use_cases": [
+      "Автоматизация продаж",
+      "Управление клиентами",
+      "Аналитика эффективности",
+      "Интеграция с внешними системами"
+    ]
+  },
+  "goals": [
+    "Углубить понимание существующих клиентов",
+    "Выявить новые возможности для развития",
+    "Улучшить продуктовую стратегию",
+    "Оптимизировать customer journey"
+  ],
+  "constraints": [
+    "Необходимость работы с существующими данными",
+    "Ограничения по времени на новые интервью",
+    "Требования к качеству данных"
+  ],
+  "success_metrics": [
+    "Качество follow-up интервью",
+    "Покрытие всех сегментов",
+    "Выявление новых insights",
+    "Практичность рекомендаций"
+  ]
+}
+

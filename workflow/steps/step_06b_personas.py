@@ -189,10 +189,10 @@ class Step(BaseStep):
             resp = self.llm.generate_json(
                 system_prompt=system,
                 user_prompt=user,
-                org_context="",
-                standard_schema={},
-                standard_text="",
-                reflection_notes=""
+                org_context=str(context.get("org_context", {})),
+                standard_schema=context.get("schemas", {}).get("step_06b_personas", {}),
+                standard_text=context.get("md_standards", {}).get("decision_mapping.md", ""),
+                reflection_notes=context.get("reflection_notes", "")
             )
             
             return resp.get("description", "Persona description not available")
