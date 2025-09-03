@@ -3,8 +3,15 @@
 Использует RANDOM_SEED для воспроизводимости результатов.
 """
 import random
-import numpy as np
 from typing import Optional
+
+# Опциональный импорт numpy
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    HAS_NUMPY = False
+    np = None
 
 
 def set_random_seed(seed: Optional[int] = None) -> None:
@@ -23,11 +30,8 @@ def set_random_seed(seed: Optional[int] = None) -> None:
         random.seed(seed)
         
         # Устанавливаем seed для numpy (если используется)
-        try:
+        if HAS_NUMPY and np is not None:
             np.random.seed(seed)
-        except ImportError:
-            # numpy не установлен, это нормально
-            pass
         
         print(f"🔒 Random seed set to: {seed}")
 
@@ -116,4 +120,5 @@ def ensure_determinism(func):
         set_random_seed()
         return func(*args, **kwargs)
     return wrapper
+
 

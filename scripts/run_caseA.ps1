@@ -70,3 +70,4 @@ if ($LASTEXITCODE -eq 0) {
 
 Write-Host "📋 Check the artifacts directory for results" -ForegroundColor Cyan
 
+

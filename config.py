@@ -111,7 +111,9 @@ if RANDOM_SEED:
 # --- Workflow Definition ---
 WORKFLOW_STEPS = [
     "step_00_compliance_check",
+    "step_00a_llm_preflight",
     "step_02_extract",
+    "step_02a_guide_compile",
     "step_02b_initial_classification",
     "step_03_interview_collect",
     "step_04_jtbd",
@@ -119,6 +121,7 @@ WORKFLOW_STEPS = [
     "step_06_decision_mapping",
     "step_10_synthesis",
     "step_11_tasks",
+    "step_export_human_readable",
 ]
 CRITICAL_STEPS_FOR_HITL = [
     "step_02a_guide_compile",  # <— добавить эту строку

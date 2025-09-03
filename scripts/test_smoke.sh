@@ -72,3 +72,4 @@ fi
 echo "📋 Check the artifacts directory for smoke test results"
 exit $EXIT_CODE
 
+

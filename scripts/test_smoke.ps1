@@ -66,3 +66,4 @@ if ($exitCode -eq 0) {
 Write-Host "📋 Check the artifacts directory for smoke test results" -ForegroundColor Cyan
 exit $exitCode
 
+

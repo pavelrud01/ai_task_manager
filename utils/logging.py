@@ -139,3 +139,4 @@ def get_logger(run_dir: Path) -> EventLogger:
     """Получить логгер для указанной директории запуска"""
     return EventLogger(run_dir)
 
+

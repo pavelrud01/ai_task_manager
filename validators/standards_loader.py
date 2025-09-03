@@ -187,17 +187,54 @@ def load_contract_schemas() -> Dict[str, dict]:
     return result
 
 
-# NEW: загрузка орг-контекста (CompanyCard/MarketCard/Lessons)
+# NEW: загрузка орг-контекста (CompanyCard/MarketCard/Lessons + Knowledge Bank)
 def load_organizational_context() -> Dict[str, str]:
     ctx_dir = REPO_ROOT / "prompts" / "context"
     def read_or_empty(name: str) -> str:
         p = ctx_dir / name
         return p.read_text(encoding="utf-8") if p.exists() else ""
-    return {
+    
+    # Базовые контекстные файлы
+    result = {
         "CompanyCard.md": read_or_empty("CompanyCard.md"),
         "MarketCard.md": read_or_empty("MarketCard.md"),
         "Lessons.md": read_or_empty("Lessons.md"),
     }
+    
+    # Загружаем Knowledge Bank
+    knowledge_bank = load_knowledge_bank()
+    result.update(knowledge_bank)
+    
+    return result
+
+
+def load_knowledge_bank() -> Dict[str, str]:
+    """
+    Загружает все файлы из Knowledge Bank (prompts/context/knowledge/).
+    Возвращает словарь {relative_path: content} для всех .md файлов.
+    """
+    knowledge_dir = REPO_ROOT / "prompts" / "context" / "knowledge"
+    result = {}
+    
+    if not knowledge_dir.exists():
+        return result
+    
+    # Рекурсивно обходим все подпапки
+    for md_file in knowledge_dir.rglob("*.md"):
+        try:
+            # Получаем относительный путь от knowledge_dir
+            relative_path = md_file.relative_to(knowledge_dir)
+            # Используем forward slashes для консистентности
+            key = str(relative_path).replace("\\", "/")
+            
+            content = md_file.read_text(encoding="utf-8")
+            result[key] = content
+            
+        except Exception as e:
+            print(f"Warning: Could not load knowledge file {md_file}: {e}")
+            continue
+    
+    return result
 
 
 # NEW: короткое резюме понимания для step_00_understanding.md
@@ -214,6 +251,9 @@ def summarize_understanding(context: dict) -> str:
           "## Schemas loaded", 
           ", ".join(sorted((context.get('schemas') or {}).keys())) or "-",
           "",
+          "## Knowledge Bank loaded",
+          _format_knowledge_bank_summary(context.get('org_context') or {}),
+          "",
           "## Org Context Preview"]
     # форматируем короткий превью контекста
     org = context.get("org_context") or {}
@@ -221,6 +261,19 @@ def summarize_understanding(context: dict) -> str:
         if content and len(content.strip()) > 10:
             md.append(f"### {name}\n{content[:500]}...\n")
     return "\n".join(md)
+
+
+def _format_knowledge_bank_summary(org_context: Dict[str, str]) -> str:
+    """Форматирует краткое резюме загруженных файлов Knowledge Bank."""
+    knowledge_files = []
+    for key in org_context.keys():
+        if "/" in key:  # Файлы из knowledge bank имеют путь с "/"
+            knowledge_files.append(key)
+    
+    if not knowledge_files:
+        return "-"
+    
+    return ", ".join(sorted(knowledge_files))
 
 
 def get_standard_for_step(step_name: str, project_dir: Optional[Path], md_standards: Dict[str, str]) -> str:
