@@ -26,7 +26,16 @@ REQUIRED_GUIDE_SECTIONS = [
 
 def validate_artifact(step_name: str, data: dict, standards: dict) -> tuple[float, float, str]:
     """
+    Единый публичный API для валидации артефактов.
     Возвращает (schema_score, checklist_score, notes)
+    
+    Args:
+        step_name: имя шага (например, "step_04_jtbd")
+        data: данные для валидации
+        standards: словарь стандартов (может быть пустым)
+    
+    Returns:
+        tuple: (schema_score, checklist_score, notes)
     """
     schema_score, schema_notes = _validate_schema(step_name, data)
     checklist_score, checklist_notes = _validate_checklist(step_name, data)
@@ -35,7 +44,20 @@ def validate_artifact(step_name: str, data: dict, standards: dict) -> tuple[floa
     # HARD rule: require at least one evidence_ref for clean, verifiable data
     evidence_score, evidence_notes = _evidence_rule(step_name, data)
     
-    notes = f"Schema: {schema_notes} | Checklist: {checklist_notes} | Evidence: {evidence_notes}"
+    # Логгирование причин фейла
+    failure_reasons = []
+    if schema_score < 1.0:
+        failure_reasons.append(f"schema: {schema_notes}")
+    if checklist_score < 1.0:
+        failure_reasons.append(f"checklist: {checklist_notes}")
+    if evidence_score < 1.0:
+        failure_reasons.append(f"evidence: {evidence_notes}")
+    
+    if failure_reasons:
+        notes = f"FAILURES: {'; '.join(failure_reasons)}"
+    else:
+        notes = "All validations passed"
+    
     return min(schema_score, 1.0), min(checklist_score, evidence_score), notes
 
 def _validate_schema(step_name: str, data: dict) -> tuple[float, str]:

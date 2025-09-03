@@ -1,0 +1,22 @@
+{
+    "company_name": "Matrius",
+    "landing_url": "https://matrius.ru/",
+    "product": "Скорочтение",
+    "project_id": "Reading",
+    "guide": "prompts/guides/[v3.3] Гайд AJTBD-интервью для B2C-продуктов.md",
+    "company": "Matrius",
+    "products": ["Скорочтение"],
+    "personas": ["Родители 7–10", "Родители 11–14"],
+    "guides": {
+      "interview_core": "[v3.3] Гайд AJTBD-интервью для B2C-продуктов.md"
+    },
+    "data_availability": "A",
+    "n_interviews": 4,
+    "flags": {
+      "interview_after_ingest": false,
+      "autofix_until_valid": true,
+      "max_passes": 2,
+      "use_precompiled_guide": false
+    }
+  }
+  

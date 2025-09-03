@@ -1,0 +1,137 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.12']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Verify test fixtures
+      run: |
+        echo "Checking test fixtures..."
+        if [ -f "tests/fixtures/input_min.json" ]; then
+          echo "✅ Input fixture found"
+        else
+          echo "❌ Input fixture missing"
+          exit 1
+        fi
+        
+        if [ -f "tests/fixtures/guide_min.md" ]; then
+          echo "✅ Guide fixture found"
+        else
+          echo "❌ Guide fixture missing"
+          exit 1
+        fi
+        
+    - name: Run smoke test
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        echo "🚀 Starting smoke test on ${{ matrix.os }}"
+        python scripts/test_smoke.py
+        
+    - name: Upload smoke test artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: smoke-test-results-${{ matrix.os }}
+        path: |
+          artifacts/*/smoke_report.md
+          artifacts/*/step_*.json
+          artifacts/*/step_*.md
+        retention-days: 7
+        
+    - name: Upload smoke test logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: smoke-test-logs-${{ matrix.os }}
+        path: |
+          artifacts/*/
+        retention-days: 3
+
+  smoke-test-summary:
+    needs: smoke-test
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download smoke test artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: smoke-results
+        
+    - name: Generate summary
+      run: |
+        echo "# Smoke Test Summary" > smoke_summary.md
+        echo "" >> smoke_summary.md
+        echo "**Date**: $(date)" >> smoke_summary.md
+        echo "**OS**: Ubuntu + Windows" >> smoke_summary.md
+        echo "" >> smoke_summary.md
+        
+        if [ -d "smoke-results" ]; then
+          echo "## Test Results" >> smoke_summary.md
+          echo "" >> smoke_summary.md
+          
+          for os_dir in smoke-results/*; do
+            if [ -d "$os_dir" ]; then
+              os_name=$(basename "$os_dir")
+              echo "### $os_name" >> smoke_summary.md
+              echo "" >> smoke_summary.md
+              
+              if find "$os_dir" -name "smoke_report.md" | head -1 | xargs test -f; then
+                echo "✅ Smoke test completed successfully" >> smoke_summary.md
+              else
+                echo "❌ Smoke test failed or no report found" >> smoke_summary.md
+              fi
+              echo "" >> smoke_summary.md
+            fi
+          done
+        else
+          echo "❌ No smoke test artifacts found" >> smoke_summary.md
+        fi
+        
+        cat smoke_summary.md
+        
+    - name: Upload summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: smoke-test-summary
+        path: smoke_summary.md
+        retention-days: 30
+
+
